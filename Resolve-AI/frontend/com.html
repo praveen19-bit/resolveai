@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResolveAI — Report Issue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --p:#7c3aed;--i:#6366f1;--pl:#a78bfa;--pp:#ede9fe;
+  --dark:#1e1b4b;--gray:#6b7280;--border:#e5e7eb;--white:#fff;
+  --bg:linear-gradient(135deg,#f0f0ff 0%,#e8e4ff 35%,#f5f0ff 65%,#eaf0ff 100%);
+  --success:#16a34a;--warning:#d97706;--danger:#dc2626;
+}
+html,body{font-family:'Inter',sans-serif;min-height:100vh;background:var(--bg);overflow-x:hidden;}
+body{display:flex;flex-direction:column;min-height:100vh;}
+
+/* MESH BG */
+.mesh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.mb{position:absolute;border-radius:50%;filter:blur(90px);}
+.mb1{width:700px;height:700px;background:rgba(124,58,237,.09);top:-250px;left:-200px;animation:d1 12s ease-in-out infinite;}
+.mb2{width:550px;height:550px;background:rgba(99,102,241,.07);bottom:-200px;right:-180px;animation:d2 10s ease-in-out infinite;}
+.mb3{width:400px;height:400px;background:rgba(167,139,250,.06);top:35%;left:38%;animation:d3 14s ease-in-out infinite;}
+@keyframes d1{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-50px) scale(1.05);}66%{transform:translate(-20px,30px) scale(.97);}}
+@keyframes d2{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(-30px,40px) scale(1.07);}66%{transform:translate(25px,-20px) scale(.95);}}
+@keyframes d3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-30px,-40px) scale(1.1);}}
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.pt{position:absolute;border-radius:50%;animation:ptF linear infinite;}
+@keyframes ptF{0%{transform:translateY(105vh) rotate(0);opacity:0;}5%{opacity:1;}90%{opacity:.7;}100%{transform:translateY(-60px) rotate(720deg);opacity:0;}}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.o1{width:200px;height:200px;background:radial-gradient(circle,rgba(124,58,237,.08),transparent);top:-60px;right:15%;animation:oP 4s ease-in-out infinite;}
+.o2{width:120px;height:120px;background:radial-gradient(circle,rgba(99,102,241,.1),transparent);bottom:20%;left:3%;animation:oP 5s 1s ease-in-out infinite;}
+.o3{width:60px;height:60px;background:rgba(124,58,237,.14);top:42%;right:4%;animation:oB 3s ease-in-out infinite;}
+.o4{width:28px;height:28px;background:var(--p);opacity:.18;top:25%;left:10%;animation:oS 6s linear infinite;}
+.o5{width:18px;height:18px;background:var(--i);opacity:.2;bottom:38%;right:8%;animation:oS 8s linear infinite reverse;}
+@keyframes oP{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.2);opacity:1;}}
+@keyframes oB{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+@keyframes oS{to{transform:rotate(360deg);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:15px 56px;background:rgba(255,255,255,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.9);animation:navIn .6s ease both;transition:background .3s,box-shadow .3s;}
+.nav.scrolled{background:rgba(255,255,255,.92);box-shadow:0 4px 24px rgba(99,102,241,.1);}
+@keyframes navIn{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:none;}}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-box{width:38px;height:38px;background:linear-gradient(135deg,var(--p),var(--i));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(124,58,237,.32);transition:transform .3s;}
+.nav-logo:hover .logo-box{transform:rotate(-10deg) scale(1.08);}
+.logo-text{font-size:18px;font-weight:800;color:var(--dark);letter-spacing:-.5px;}
+.logo-text span{color:var(--p);}
+.nav-chips{display:flex;align-items:center;gap:4px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.1);border-radius:28px;padding:4px;}
+.nchip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;color:#4c4f7a;text-decoration:none;transition:all .2s;}
+.nchip:hover,.nchip.active{background:var(--white);color:var(--p);box-shadow:0 2px 8px rgba(124,58,237,.12);}
+.nav-r{display:flex;align-items:center;gap:10px;}
+.u-pill{display:flex;align-items:center;gap:7px;padding:6px 14px 6px 6px;background:rgba(255,255,255,.8);border:1px solid var(--border);border-radius:24px;}
+.u-av{width:26px;height:26px;background:linear-gradient(135deg,var(--p),var(--i));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;}
+.u-nm{font-size:12px;font-weight:600;color:var(--dark);}
+.udot{width:6px;height:6px;background:#22c55e;border-radius:50%;animation:blink 2s infinite;}
+.nav-btn{padding:8px 18px;background:linear-gradient(135deg,var(--p),var(--i));border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(124,58,237,.3);}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(124,58,237,.45);}
+
+/* APP WRAP */
+.app-wrap{flex:1;display:flex;position:relative;z-index:1;overflow:hidden;height:calc(100vh - 69px);}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:rgba(255,255,255,.7);backdrop-filter:blur(20px);border-right:1px solid rgba(255,255,255,.9);display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto;}
+.sb-sec{font-size:9px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1.2px;padding:0 8px;margin:14px 0 5px;}
+.sb-lnk{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:11px;font-size:12px;font-weight:500;color:var(--gray);text-decoration:none;transition:all .2s;margin-bottom:2px;position:relative;overflow:hidden;}
+.sb-lnk::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--p),var(--i));border-radius:0 3px 3px 0;transform:scaleY(0);transition:transform .3s;}
+.sb-lnk:hover{background:rgba(124,58,237,.06);color:var(--p);}
+.sb-lnk.active{background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(99,102,241,.06));color:var(--p);font-weight:600;}
+.sb-lnk.active::before,.sb-lnk:hover::before{transform:scaleY(1);}
+.sb-lnk svg{width:15px;height:15px;flex-shrink:0;}
+.sb-bdg{margin-left:auto;padding:2px 7px;background:var(--p);color:#fff;border-radius:20px;font-size:9px;font-weight:700;}
+.sb-div{height:1px;background:var(--border);margin:10px 4px;}
+.sbs-card{background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.1);border-radius:12px;padding:12px;margin-bottom:8px;transition:transform .2s;cursor:default;}
+.sbs-card:hover{transform:translateY(-2px);}
+.sbsc-v{font-size:22px;font-weight:900;color:var(--p);letter-spacing:-1px;}
+.sbsc-l{font-size:10px;color:#9ca3af;margin-top:1px;}
+.sb-bot{margin-top:auto;}
+.sb-out{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:11px;font-size:12px;color:#9ca3af;cursor:pointer;transition:all .2s;border:none;background:none;font-family:'Inter',sans-serif;width:100%;}
+.sb-out:hover{background:rgba(239,68,68,.06);color:#ef4444;}
+
+/* INTRO */
+#introScreen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 48px;overflow:hidden;transition:opacity .5s,transform .5s;}
+#introScreen.exit{opacity:0;transform:scale(.96) translateY(-16px);}
+.intro-wrap{max-width:920px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+.intro-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.15);border-radius:30px;padding:7px 16px;font-size:11px;font-weight:700;color:var(--p);letter-spacing:.5px;text-transform:uppercase;margin-bottom:22px;animation:bPop .6s .1s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes bPop{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.bdot{width:7px;height:7px;background:var(--p);border-radius:50%;animation:blink 1.5s ease-in-out infinite;}
+.intro-title{font-size:40px;font-weight:900;color:var(--dark);line-height:1.06;letter-spacing:-1.5px;margin-bottom:16px;animation:tIn .7s .2s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes tIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+.grad-text{background:linear-gradient(135deg,var(--p),var(--i),var(--pl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:gShift 4s linear infinite;}
+@keyframes gShift{0%{background-position:0%;}100%{background-position:200%;}}
+.intro-desc{font-size:14px;color:var(--gray);line-height:1.8;margin-bottom:28px;max-width:400px;animation:fUp .6s .3s ease both;}
+@keyframes fUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+.intro-btns{display:flex;gap:12px;flex-wrap:wrap;animation:fUp .6s .4s ease both;}
+.btn-main{padding:13px 28px;background:linear-gradient(135deg,var(--p),var(--i));border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .25s;box-shadow:0 6px 20px rgba(124,58,237,.38);display:flex;align-items:center;gap:9px;position:relative;overflow:hidden;}
+.btn-main::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shim 2.5s 1s linear infinite;}
+@keyframes shim{to{left:160%;}}
+.btn-main:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(124,58,237,.5);}
+.btn-ghost{padding:13px 22px;background:rgba(255,255,255,.9);border:1.5px solid var(--border);border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.btn-ghost:hover{border-color:var(--p);color:var(--p);transform:translateY(-2px);}
+.feat-pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:22px;animation:fUp .6s .5s ease both;}
+.fpill{display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.1);border-radius:20px;font-size:11px;font-weight:600;color:#4c4f7a;transition:all .2s;cursor:default;}
+.fpill:hover{background:#fff;border-color:rgba(124,58,237,.25);color:var(--p);transform:translateY(-2px);}
+.fpill svg{width:12px;height:12px;}
+
+/* floating ticket cards */
+.intro-right{position:relative;height:320px;animation:fUp .7s .3s ease both;}
+.fc{position:absolute;background:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.95);border-radius:18px;padding:14px 17px;box-shadow:0 10px 40px rgba(99,102,241,.13);backdrop-filter:blur(12px);transition:transform .3s;}
+.fc:hover{transform:translateY(-5px)!important;}
+.fc-a{width:220px;top:0;left:20px;animation:fc1 5s ease-in-out infinite;}
+.fc-b{width:205px;top:100px;right:0;animation:fc2 5s 1.5s ease-in-out infinite;}
+.fc-c{width:195px;bottom:0;left:5px;animation:fc3 5s .8s ease-in-out infinite;}
+@keyframes fc1{0%,100%{transform:translate(0,0) rotate(-1.5deg);}50%{transform:translate(5px,-12px) rotate(.5deg);}}
+@keyframes fc2{0%,100%{transform:translate(0,0) rotate(1.5deg);}50%{transform:translate(-5px,-10px) rotate(-.5deg);}}
+@keyframes fc3{0%,100%{transform:translate(0,0) rotate(-.5deg);}50%{transform:translate(3px,-8px) rotate(1deg);}}
+.fct{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.fc-id{font-size:10px;font-weight:700;color:var(--p);}
+.fc-st{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.st-open{background:#fff7ed;color:#c2410c;}
+.st-prog{background:#ede9fe;color:var(--p);}
+.st-done{background:#f0fdf4;color:#15803d;}
+.fc-ttl{font-size:12px;font-weight:600;color:var(--dark);margin-bottom:5px;}
+.fc-mt{font-size:10px;color:#9ca3af;}
+.fc-bar{height:3px;background:#f0f0f8;border-radius:2px;margin-top:9px;overflow:hidden;}
+.fc-fill{height:100%;border-radius:2px;animation:bFill 2s ease both;}
+@keyframes bFill{from{width:0;}to{width:var(--w);}}
+
+/* CHAT SCREEN */
+#chatScreen{flex:1;display:none;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s;}
+#chatScreen.visible{display:flex;opacity:1;transform:none;}
+
+/* chat topbar */
+.ctop{padding:13px 24px;background:rgba(255,255,255,.8);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ct-l{display:flex;align-items:center;gap:12px;}
+.ai-av{width:42px;height:42px;background:linear-gradient(135deg,var(--p),var(--i));border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,58,237,.35);animation:gemGlow 3s ease-in-out infinite;}
+@keyframes gemGlow{0%,100%{box-shadow:0 4px 16px rgba(124,58,237,.3);}50%{box-shadow:0 6px 24px rgba(124,58,237,.55);}}
+.ct-nm{font-size:14px;font-weight:700;color:var(--dark);}
+.ct-st{font-size:11px;color:#22c55e;font-weight:600;display:flex;align-items:center;gap:4px;}
+.ct-st::before{content:'';width:6px;height:6px;background:#22c55e;border-radius:50%;animation:blink 2s infinite;}
+.progress-strip{display:flex;align-items:center;gap:8px;}
+.prog-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;transition:all .3s;}
+.prog-item.done{background:#f0fdf4;color:#15803d;}
+.prog-item.active{background:var(--pp);color:var(--p);}
+.prog-item.pending{background:#f9fafb;color:#d1d5db;}
+.prog-dot{width:7px;height:7px;border-radius:50%;}
+.prog-item.done .prog-dot{background:#22c55e;}
+.prog-item.active .prog-dot{background:var(--p);animation:blink 1.2s infinite;}
+.prog-item.pending .prog-dot{background:#d1d5db;}
+.ct-r{display:flex;gap:8px;}
+.bk-btn{padding:7px 14px;background:rgba(255,255,255,.9);border:1.5px solid var(--border);border-radius:9px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.bk-btn:hover{border-color:var(--p);color:var(--p);}
+
+/* messages */
+.msgs{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;}
+.msgs::-webkit-scrollbar{width:4px;}
+.msgs::-webkit-scrollbar-thumb{background:rgba(124,58,237,.15);border-radius:4px;}
+.msg{display:flex;gap:10px;max-width:80%;animation:mIn .35s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes mIn{from{opacity:0;transform:translateY(10px) scale(.96);}to{opacity:1;transform:none;}}
+.msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.msg.user .bbl{background:linear-gradient(135deg,var(--p),var(--i));color:#fff;border-bottom-right-radius:4px;box-shadow:0 4px 14px rgba(124,58,237,.3);}
+.msg.bot .bbl{background:rgba(255,255,255,.95);border:1px solid rgba(124,58,237,.1);color:var(--dark);border-bottom-left-radius:4px;box-shadow:0 2px 10px rgba(124,58,237,.07);}
+.bbl{padding:12px 16px;border-radius:18px;font-size:13px;line-height:1.7;word-break:break-word;}
+.mav{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;}
+.msg.bot .mav{background:linear-gradient(135deg,var(--p),var(--i));box-shadow:0 2px 8px rgba(124,58,237,.25);}
+.msg.user .mav{background:rgba(124,58,237,.1);}
+.mt{font-size:10px;color:#9ca3af;margin-top:4px;padding:0 2px;}
+.msg.user .mt{text-align:right;color:#c4b5fd;}
+
+/* typing */
+.typing{display:flex;align-items:center;gap:4px;padding:4px 2px;}
+.typing span{width:7px;height:7px;background:var(--p);border-radius:50%;animation:typ .75s infinite;}
+.typing span:nth-child(2){animation-delay:.15s;}
+.typing span:nth-child(3){animation-delay:.3s;}
+@keyframes typ{0%,60%,100%{transform:translateY(0) scale(.7);opacity:.4;}30%{transform:translateY(-6px) scale(1);opacity:1;}}
+
+/* quick reply chips */
+.quick-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.qchip{padding:6px 14px;background:rgba(124,58,237,.07);border:1.5px solid rgba(124,58,237,.18);border-radius:20px;font-size:12px;font-weight:600;color:var(--p);cursor:pointer;transition:all .2s;}
+.qchip:hover{background:var(--pp);border-color:var(--p);transform:translateY(-1px);}
+
+/* collected info card */
+.info-card{background:rgba(124,58,237,.04);border:1.5px solid rgba(124,58,237,.15);border-radius:14px;padding:14px 16px;margin-top:10px;animation:mIn .4s ease both;}
+.ic-title{font-size:11px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.ic-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(124,58,237,.07);font-size:12.5px;}
+.ic-row:last-child{border-bottom:none;}
+.ic-key{color:#9ca3af;font-weight:500;}
+.ic-val{font-weight:700;color:var(--dark);}
+.ic-val.pri-critical{color:#dc2626;}
+.ic-val.pri-high{color:#d97706;}
+.ic-val.pri-medium{color:var(--p);}
+.ic-val.pri-low{color:#16a34a;}
+
+/* confirm card */
+.confirm-card{background:#fff;border:1.5px solid rgba(124,58,237,.2);border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(99,102,241,.12);margin-top:10px;animation:mIn .5s cubic-bezier(.34,1.56,.64,1) both;position:relative;}
+.confirm-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--p),var(--i),var(--pl),var(--p));background-size:200%;animation:barFlow 2.5s linear infinite;}
+@keyframes barFlow{0%{background-position:0%;}100%{background-position:200%;}}
+.cc-body{padding:16px;}
+.cc-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.cc-item{background:#fafafe;border:1px solid rgba(124,58,237,.08);border-radius:10px;padding:10px 12px;}
+.cc-lbl{font-size:9.5px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.cc-val{font-size:12.5px;font-weight:700;color:var(--dark);}
+.cc-desc{background:#fafafe;border:1px solid rgba(124,58,237,.08);border-radius:10px;padding:10px 12px;margin-bottom:14px;}
+.cc-actions{display:flex;gap:9px;}
+.cc-confirm{flex:1;padding:11px;background:linear-gradient(135deg,var(--p),var(--i));border:none;border-radius:11px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(124,58,237,.35);display:flex;align-items:center;justify-content:center;gap:7px;position:relative;overflow:hidden;}
+.cc-confirm::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shim 2s .5s linear infinite;}
+.cc-confirm:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.5);}
+.cc-confirm.loading{pointer-events:none;opacity:.82;}
+.cc-spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .5s linear infinite;display:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.cc-confirm.loading .cc-spin{display:block;}
+.cc-confirm.loading .cc-lbl2{display:none;}
+.cc-edit{padding:11px 16px;background:#fff;border:1.5px solid var(--border);border-radius:11px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s;}
+.cc-edit:hover{border-color:var(--p);color:var(--p);}
+
+/* media preview */
+.media-prev{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.prev-th{width:46px;height:46px;object-fit:cover;border-radius:8px;border:1.5px solid rgba(124,58,237,.18);animation:mIn .3s ease;position:relative;}
+.prev-wrap{position:relative;display:inline-block;}
+.prev-rm{position:absolute;top:-5px;right:-5px;width:16px;height:16px;background:#ef4444;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;line-height:1;}
+
+/* input area */
+.inp-area{padding:14px 24px;background:rgba(255,255,255,.78);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.9);flex-shrink:0;}
+.att-row{display:flex;gap:7px;margin-bottom:9px;}
+.att-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(255,255,255,.9);border:1.5px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#4c4f7a;cursor:pointer;transition:all .2s;}
+.att-btn:hover{border-color:rgba(124,58,237,.3);color:var(--p);transform:translateY(-1px);}
+.att-btn svg{width:13px;height:13px;}
+input[type=file]{display:none;}
+.inp-row{display:flex;gap:10px;align-items:flex-end;}
+.inp{flex:1;padding:12px 14px;border:1.5px solid rgba(124,58,237,.15);border-radius:13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);background:rgba(255,255,255,.9);outline:none;resize:none;max-height:100px;transition:all .22s;}
+.inp::placeholder{color:#d1d5db;}
+.inp:focus{border-color:var(--p);background:#fff;box-shadow:0 0 0 4px rgba(124,58,237,.08);}
+.snd{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--p),var(--i));border:none;border-radius:12px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(124,58,237,.35);transition:all .22s cubic-bezier(.34,1.56,.64,1);}
+.snd:hover{transform:scale(1.1) rotate(-5deg);box-shadow:0 8px 20px rgba(124,58,237,.52);}
+.snd:disabled{opacity:.4;transform:none;cursor:not-allowed;}
+
+/* success modal */
+.mov{position:fixed;inset:0;background:rgba(30,27,75,.4);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;}
+.mov.open{display:flex;animation:mOv .3s ease;}
+@keyframes mOv{from{opacity:0;}to{opacity:1;}}
+.mbox{background:#fff;border-radius:26px;padding:38px 34px;max-width:420px;width:92%;text-align:center;box-shadow:0 32px 80px rgba(99,102,241,.2);animation:mPop .5s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
+@keyframes mPop{from{opacity:0;transform:scale(.82) translateY(24px);}to{opacity:1;transform:none;}}
+.mbox::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--p),var(--i),var(--pl),var(--p));background-size:200%;animation:barFlow 2.5s linear infinite;}
+.cf-wrap{position:absolute;inset:0;overflow:hidden;border-radius:26px;pointer-events:none;}
+.cf{position:absolute;border-radius:2px;animation:cfF linear forwards;}
+@keyframes cfF{0%{transform:translateY(-20px) rotate(0);opacity:1;}100%{transform:translateY(500px) rotate(720deg);opacity:0;}}
+.mico{width:68px;height:68px;background:linear-gradient(135deg,var(--p),var(--i));border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 10px 32px rgba(124,58,237,.4);animation:icoBnc .6s .1s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes icoBnc{from{opacity:0;transform:scale(.4) rotate(-18deg);}to{opacity:1;transform:none;}}
+.mtl{font-size:23px;font-weight:900;color:var(--dark);margin-bottom:8px;letter-spacing:-.4px;}
+.msl{font-size:13px;color:var(--gray);line-height:1.65;margin-bottom:22px;}
+.mtid{background:rgba(124,58,237,.07);border:1.5px solid rgba(124,58,237,.18);border-radius:14px;padding:18px;margin-bottom:16px;}
+.tid{font-size:26px;font-weight:900;color:var(--p);letter-spacing:2px;font-family:monospace;}
+.tids{font-size:11px;color:#9ca3af;margin-top:4px;}
+.mwa{display:flex;align-items:center;justify-content:center;gap:7px;background:#f0fdf4;border:1px solid rgba(34,197,94,.25);border-radius:12px;padding:11px;margin-bottom:20px;font-size:12px;font-weight:700;color:#15803d;}
+.mcta{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),var(--i));border:none;border-radius:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 6px 20px rgba(124,58,237,.38);transition:all .25s;}
+.mcta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,.52);}
+.msec{margin-top:9px;width:100%;padding:10px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s;}
+.msec:hover{border-color:var(--p);color:var(--p);}
+
+/* toast */
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,var(--p),var(--i));color:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 8px 32px rgba(124,58,237,.35);z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);max-width:290px;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.tt{font-weight:800;font-size:13px;margin-bottom:2px;}
+.tb{font-size:12px;color:rgba(255,255,255,.8);}
+
+@media(max-width:900px){.intro-wrap{grid-template-columns:1fr;text-align:center;}.intro-desc{margin:0 auto 26px;}.intro-btns,.feat-pills{justify-content:center;}.intro-right{display:none;}.intro-title{font-size:32px;}}
+@media(max-width:640px){.sidebar{display:none;}.nav{padding:12px 16px;}.msgs{padding:12px 14px;}.inp-area{padding:10px 14px;}.ctop{padding:10px 14px;flex-wrap:wrap;gap:8px;}.progress-strip{display:none;}}
+</style>
+</head>
+<body>
+<div class="mesh"><div class="mb mb1"></div><div class="mb mb2"></div><div class="mb mb3"></div></div>
+<div class="particles" id="pts"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="orb o4"></div><div class="orb o5"></div>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="login.html">
+    <div class="logo-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="logo-text">Resolve<span>AI</span></div>
+  </a>
+  <div class="nav-chips">
+    <a class="nchip active" href="complaint.html">Report Issue</a>
+    <a class="nchip" href="my-tickets.html">My Tickets</a>
+  </div>
+  <div class="nav-r">
+    <div class="u-pill"><div class="u-av" id="uAv">S</div><span class="u-nm" id="uNm">Student</span><div class="udot"></div></div>
+    <button class="nav-btn" onclick="localStorage.clear();location.href='login.html'">Sign Out</button>
+  </div>
+</nav>
+
+<div class="app-wrap">
+  <nav class="sidebar">
+    <div class="sb-sec">Menu</div>
+    <a class="sb-lnk active" href="complaint.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Report Issue</a>
+    <a class="sb-lnk" href="my-tickets.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>My Tickets<span class="sb-bdg" id="sbBdg">0</span></a>
+    <div class="sb-div"></div>
+    <div class="sb-sec">Quick Stats</div>
+    <div class="sbs-card"><div class="sbsc-v" id="sbOpen">0</div><div class="sbsc-l">Open Tickets</div></div>
+    <div class="sbs-card"><div class="sbsc-v" style="color:#22c55e" id="sbDone">0</div><div class="sbsc-l">Resolved</div></div>
+    <div class="sb-bot"><div class="sb-div"></div>
+    <button class="sb-out" onclick="localStorage.clear();location.href='login.html'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button></div>
+  </nav>
+
+  <!-- INTRO -->
+  <div id="introScreen">
+    <div class="intro-wrap">
+      <div>
+        <div class="intro-badge"><div class="bdot"></div>AI Conversational Agent</div>
+        <h1 class="intro-title">Just describe<br><span class="grad-text">your issue</span><br>in plain words</h1>
+        <p class="intro-desc">Our AI agent will have a natural conversation with you — asking follow-up questions to fully understand your complaint before routing it to the right team instantly.</p>
+        <div class="intro-btns">
+          <button class="btn-main" onclick="enterChat()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Start Chatting
+          </button>
+          <a class="btn-ghost" href="my-tickets.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            My Tickets
+          </a>
+        </div>
+        <div class="feat-pills">
+          <div class="fpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Conversational AI</div>
+          <div class="fpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Auto-classify</div>
+          <div class="fpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Photo + Video</div>
+          <div class="fpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>Voice Input</div>
+        </div>
+      </div>
+      <div class="intro-right">
+        <div class="fc fc-a">
+          <div class="fct"><span class="fc-id">TKT-2025-0042</span><span class="fc-st st-prog">In Progress</span></div>
+          <div class="fc-ttl">WiFi down in CS Lab 3</div>
+          <div class="fc-mt">IT Dept · High Priority · 4h left</div>
+          <div class="fc-bar"><div class="fc-fill" style="--w:65%;background:linear-gradient(90deg,var(--p),var(--i));"></div></div>
+        </div>
+        <div class="fc fc-b">
+          <div class="fct"><span class="fc-id">TKT-2025-0039</span><span class="fc-st st-done">Resolved ✓</span></div>
+          <div class="fc-ttl">AC not working — Room 204</div>
+          <div class="fc-mt">HVAC Team · Resolved in 3.2h</div>
+          <div class="fc-bar"><div class="fc-fill" style="--w:100%;background:linear-gradient(90deg,#22c55e,#0ea5e9);"></div></div>
+        </div>
+        <div class="fc fc-c">
+          <div class="fct"><span class="fc-id">TKT-2025-0048</span><span class="fc-st st-open">Open</span></div>
+          <div class="fc-ttl">Projector bulb — Hall B</div>
+          <div class="fc-mt">AV Support · Low Priority</div>
+          <div class="fc-bar"><div class="fc-fill" style="--w:8%;background:linear-gradient(90deg,#f59e0b,#f97316);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT SCREEN -->
+  <div id="chatScreen">
+    <div class="ctop">
+      <div class="ct-l">
+        <div class="ai-av"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div>
+          <div class="ct-nm">ResolveAI Agent</div>
+          <div class="ct-st">Online — collecting your complaint</div>
+        </div>
+      </div>
+      <!-- progress strip -->
+      <div class="progress-strip" id="progStrip">
+        <div class="prog-item pending" id="p1"><div class="prog-dot"></div>Issue</div>
+        <div class="prog-item pending" id="p2"><div class="prog-dot"></div>Location</div>
+        <div class="prog-item pending" id="p3"><div class="prog-dot"></div>Category</div>
+        <div class="prog-item pending" id="p4"><div class="prog-dot"></div>Priority</div>
+        <div class="prog-item pending" id="p5"><div class="prog-dot"></div>Submit</div>
+      </div>
+      <div class="ct-r">
+        <button class="bk-btn" onclick="backToIntro()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+      </div>
+    </div>
+
+    <div class="msgs" id="msgs"></div>
+
+    <div class="inp-area">
+      <div class="media-prev" id="mediaPrev"></div>
+      <div class="att-row">
+        <label class="att-btn" for="imgUp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Photo/Video
+        </label>
+        <input type="file" id="imgUp" accept="image/*,video/*" multiple onchange="handleMedia(this)">
+        <label class="att-btn" id="voiceBtn" onclick="toggleVoice()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          <span id="voiceTxt">Voice</span>
+        </label>
+      </div>
+      <div class="inp-row">
+        <textarea class="inp" id="inp" rows="2" placeholder="Type your complaint here… e.g. the fan in our lab is broken" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send();}"></textarea>
+        <button class="snd" id="sndBtn" onclick="send()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="mov" id="sucMod">
+  <div class="mbox">
+    <div class="cf-wrap" id="cfWrap"></div>
+    <div class="mico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+    <div class="mtl">Ticket Submitted! 🎉</div>
+    <div class="msl">Your complaint has been classified and routed. The maintenance team has been notified via WhatsApp. SLA timer is now active.</div>
+    <div class="mtid"><div class="tid" id="tidNum">TKT-00000</div><div class="tids">Save this ID to track your complaint</div></div>
+    <div class="mwa"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2"/></svg>WhatsApp notification sent to maintenance team</div>
+    <button class="mcta" onclick="location.href='my-tickets.html'">View My Tickets →</button>
+    <button class="msec" onclick="resetChat()">Report Another Issue</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="tt" id="ttT"></div><div class="tb" id="ttB"></div></div>
+
+<script>
+/* ══════════════════════════════════════
+   AUTH + INIT
+══════════════════════════════════════ */
+const username = localStorage.getItem('username') || 'student';
+document.getElementById('uNm').textContent = username.charAt(0).toUpperCase() + username.slice(1);
+document.getElementById('uAv').textContent = username.charAt(0).toUpperCase();
+
+/* particles */
+(()=>{
+  const c = document.getElementById('pts');
+  for(let i=0;i<30;i++){
+    const p = document.createElement('div'); p.className='pt';
+    const s = Math.random()*5+2;
+    p.style.cssText = `left:${Math.random()*100}%;width:${s}px;height:${s}px;background:rgba(${Math.random()>.5?'124,58,237':'99,102,241'},${Math.random()*.12+.04});animation-duration:${Math.random()*22+10}s;animation-delay:${Math.random()*18}s;`;
+    c.appendChild(p);
+  }
+})();
+
+window.addEventListener('scroll', ()=> document.getElementById('nav').classList.toggle('scrolled', window.scrollY>30));
+
+function loadStats(){
+  const all = JSON.parse(localStorage.getItem('tickets')||'[]');
+  const mine = all.filter(t=>t.username===username);
+  document.getElementById('sbBdg').textContent = mine.length;
+  document.getElementById('sbOpen').textContent = mine.filter(t=>t.status==='Open'||t.status==='In Progress').length;
+  document.getElementById('sbDone').textContent = mine.filter(t=>t.status==='Resolved'||t.status==='Closed').length;
+}
+loadStats();
+
+/* ══════════════════════════════════════
+   SCREEN TRANSITIONS
+══════════════════════════════════════ */
+let inChat = false;
+function enterChat(){
+  const intro = document.getElementById('introScreen');
+  const chat  = document.getElementById('chatScreen');
+  intro.classList.add('exit');
+  setTimeout(()=>{
+    intro.style.display = 'none';
+    chat.style.display  = 'flex';
+    requestAnimationFrame(()=> chat.classList.add('visible'));
+    startConversation();
+  }, 500);
+  inChat = true;
+}
+
+function backToIntro(){
+  const intro = document.getElementById('introScreen');
+  const chat  = document.getElementById('chatScreen');
+  chat.classList.remove('visible');
+  setTimeout(()=>{
+    chat.style.display  = 'none';
+    intro.style.display = 'flex';
+    intro.classList.remove('exit');
+    intro.style.opacity = '0'; intro.style.transform = 'translateY(14px)';
+    requestAnimationFrame(()=>{
+      intro.style.transition = 'opacity .45s,transform .45s';
+      intro.style.opacity = '1'; intro.style.transform = 'none';
+    });
+  }, 350);
+  inChat = false;
+}
+
+/* ══════════════════════════════════════
+   CONVERSATION STATE
+   This simulates what the FastAPI /chat
+   endpoint will do in production.
+   Replace agentReply() with a fetch()
+   call to plug into the real backend.
+══════════════════════════════════════ */
+const collected = {
+  description : null,
+  location    : null,
+  category    : null,
+  priority    : null,
+  mediaUrls   : []
+};
+
+/* what the agent still needs */
+const FIELDS = ['description','location','category','priority'];
+
+/* agent conversation state */
+let conversationHistory = [];  // [{role,content}]
+let awaitingConfirm = false;
+let mediaFiles = [];
+
+/* department + contact map */
+const DEPT_MAP = {
+  'Network / IT'    : {dept:'IT Department',    contact:'Muthu Kumar', phone:'+91 98765 43210'},
+  'Electrical'      : {dept:'Electrical Team',  contact:'Ravi Kumar',  phone:'+91 98765 43211'},
+  'Civil / Plumbing': {dept:'Civil Maintenance',contact:'Senthil Kumar',phone:'+91 98765 43212'},
+  'Audio-Visual'    : {dept:'AV Support',       contact:'Prakash',     phone:'+91 98765 43213'},
+  'HVAC / AC'       : {dept:'HVAC Team',        contact:'Arjun K.',    phone:'+91 98765 43214'},
+  'Housekeeping'    : {dept:'Housekeeping',     contact:'Lakshmi',     phone:'+91 98765 43215'},
+};
+
+const SLA = {critical:'2 hours', high:'6 hours', medium:'12 hours', low:'24 hours'};
+
+/* ── Simulate the AI agent backend ──
+   In production this is replaced by:
+   const res = await fetch('/chat', {
+     method:'POST',
+     body: JSON.stringify({ session_id, message, history, collected })
+   });
+   const data = await res.json();
+*/
+async function agentReply(userMessage){
+
+  /* add user message to history */
+  conversationHistory.push({role:'user', content: userMessage});
+
+  /* ── STEP 1: extract info from this message ── */
+  extractInfo(userMessage);
+
+  /* ── STEP 2: decide what to ask next or confirm ── */
+  const missing = FIELDS.filter(f => !collected[f]);
+
+  /* all collected → show confirm card */
+  if(missing.length === 0 && !awaitingConfirm){
+    awaitingConfirm = true;
+    updateProgress();
+    return buildConfirmResponse();
+  }
+
+  /* handle yes/no to confirmation */
+  if(awaitingConfirm){
+    const lower = userMessage.toLowerCase();
+    if(lower.includes('yes')||lower.includes('ok')||lower.includes('confirm')||lower.includes('submit')||lower.includes('sure')){
+      return {type:'submit'};
+    }
+    if(lower.includes('no')||lower.includes('change')||lower.includes('edit')){
+      awaitingConfirm = false;
+      return {type:'text', text:"No problem! What would you like to change? You can tell me the correct location, category, or priority."};
+    }
+    return buildConfirmResponse(); /* re-show confirm */
+  }
+
+  /* ask for next missing field */
+  updateProgress();
+  return buildQuestion(missing[0], userMessage);
+}
+
+/* ── smart extraction ── */
+function extractInfo(msg){
+  const m = msg.toLowerCase();
+
+  /* description — first meaningful message */
+  if(!collected.description && msg.trim().length > 3){
+    collected.description = msg.trim();
+  }
+
+  /* location patterns */
+  if(!collected.location){
+    const locMatch = msg.match(/\b(block\s*[a-f\d]|room\s*\d+[a-z]?|lab\s*\d+[a-z]?|hall\s*[a-z\d]?|library|hostel|canteen|auditorium|seminar\s*hall|ground\s*floor|floor\s*\d|corridor|office|classroom|workshop)/i);
+    if(locMatch) collected.location = locMatch[0].replace(/\s+/g,' ').trim();
+    /* also capture "Block B Room 204" style */
+    const fullLoc = msg.match(/block\s*[a-f\d][,\s]+room\s*\d+/i);
+    if(fullLoc) collected.location = fullLoc[0];
+  }
+
+  /* category patterns */
+  if(!collected.category){
+    if(/wifi|internet|network|router|lan|broadband/i.test(m))      collected.category = 'Network / IT';
+    else if(/electricity|electric|power|light|switch|socket|mcb|fan|short circuit/i.test(m)) collected.category = 'Electrical';
+    else if(/water|pipe|leak|plumb|drain|tap|flush|toilet|sink/i.test(m)) collected.category = 'Civil / Plumbing';
+    else if(/projector|screen|hdmi|av|audio|speaker|mic|display/i.test(m)) collected.category = 'Audio-Visual';
+    else if(/ac|air condition|hvac|cool|heat|ventilat|compressor/i.test(m)) collected.category = 'HVAC / AC';
+    else if(/clean|sweep|dirt|garbage|waste|housekeep/i.test(m))   collected.category = 'Housekeeping';
+  }
+
+  /* priority — infer from keywords */
+  if(!collected.priority){
+    if(/urgent|emergency|danger|immediately|critical|fire|flood|electrocute/i.test(m)) collected.priority = 'critical';
+    else if(/asap|soon|important|high|not working|broken|down|outage/i.test(m))       collected.priority = 'high';
+    else if(/medium|moderate|sometime|when possible/i.test(m))                        collected.priority = 'medium';
+    else if(/low|minor|small|whenever/i.test(m))                                       collected.priority = 'low';
+    /* auto-assign if category known but no priority keyword */
+    else if(collected.category){
+      const highCats = ['Network / IT','Electrical','Civil / Plumbing'];
+      collected.priority = highCats.includes(collected.category) ? 'high' : 'medium';
+    }
+  }
+}
+
+/* ── build contextual follow-up question ── */
+function buildQuestion(field, lastMsg){
+  const questions = {
+    description: {
+      text: "I can see you need help! Could you describe the issue in a bit more detail?",
+      chips: []
+    },
+    location: {
+      text: "Got it! 📍 Which block and room is this in? For example — \"Block A, CS Lab 3\" or \"Block B, Room 204\".",
+      chips: ['Block A', 'Block B', 'Block C', 'Block D', 'Library', 'Hostel', 'Canteen']
+    },
+    category: {
+      text: "What type of issue is this?",
+      chips: ['Network / IT', 'Electrical', 'Civil / Plumbing', 'Audio-Visual', 'HVAC / AC', 'Housekeeping']
+    },
+    priority: {
+      text: "How urgent is this? I'll suggest based on what you told me, but you can override.",
+      chips: ['🔴 Critical — immediate danger', '🟠 High — affects work now', '🟡 Medium — can wait a bit', '🟢 Low — minor issue']
+    }
+  };
+
+  const q = questions[field];
+  return {type: 'question', field, text: q.text, chips: q.chips};
+}
+
+/* ── build confirm card response ── */
+function buildConfirmResponse(){
+  const cat = collected.category || 'General';
+  const deptInfo = DEPT_MAP[cat] || {dept:'General Maintenance', contact:'Admin', phone:'+91 98765 43200'};
+  return {
+    type: 'confirm',
+    collected: {...collected},
+    dept: deptInfo.dept,
+    contact: deptInfo.contact,
+    phone: deptInfo.phone,
+    sla: SLA[collected.priority] || '12 hours'
+  };
+}
+
+/* ── update progress strip ── */
+function updateProgress(){
+  const steps = ['description','location','category','priority'];
+  const missing = steps.filter(f=>!collected[f]);
+  const nextMissing = missing[0];
+
+  steps.forEach((field, i)=>{
+    const el = document.getElementById(`p${i+1}`);
+    if(collected[field]){
+      el.className = 'prog-item done';
+    } else if(field === nextMissing){
+      el.className = 'prog-item active';
+    } else {
+      el.className = 'prog-item pending';
+    }
+  });
+
+  /* submit step */
+  const submitEl = document.getElementById('p5');
+  if(missing.length === 0){
+    submitEl.className = 'prog-item active';
+  }
+}
+
+/* ══════════════════════════════════════
+   MESSAGE RENDERING
+══════════════════════════════════════ */
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const nowT  = ()=> new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+function addMsg(type, content){
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = `msg ${type}`;
+  if(type==='user') d.style.cssText='flex-direction:row-reverse;align-self:flex-end;';
+  const botIco = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`;
+  const usrIco = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  d.innerHTML = `<div class="mav">${type==='bot'?botIco:usrIco}</div><div style="flex:1;min-width:0;"><div class="bbl">${content}</div><div class="mt">${nowT()}</div></div>`;
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
+  return d;
+}
+
+function addTyping(){
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div'); d.id='typInd'; d.className='msg bot';
+  const botIco = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`;
+  d.innerHTML = `<div class="mav">${botIco}</div><div><div class="bbl"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+function removeTyping(){ const e=document.getElementById('typInd'); if(e) e.remove(); }
+
+function addBotMessage(response){
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div'); d.className='msg bot';
+  const botIco = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`;
+
+  if(response.type === 'question' || response.type === 'text'){
+    let chipsHtml = '';
+    if(response.chips && response.chips.length){
+      chipsHtml = `<div class="quick-chips">${response.chips.map(ch=>`<div class="qchip" onclick="chipClick('${ch.replace(/'/g,"\\'")}')"><span>${ch}</span></div>`).join('')}</div>`;
+    }
+    d.innerHTML = `<div class="mav">${botIco}</div><div style="flex:1;min-width:0;"><div class="bbl">${response.text}${chipsHtml}</div><div class="mt">${nowT()}</div></div>`;
+  }
+  else if(response.type === 'confirm'){
+    const priClass = {critical:'pri-critical',high:'pri-high',medium:'pri-medium',low:'pri-low'};
+    const priLabel = {critical:'🔴 Critical',high:'🟠 High',medium:'🟡 Medium',low:'🟢 Low'};
+    d.className = 'msg bot'; d.style.maxWidth='92%'; d.style.width='92%';
+    d.innerHTML = `<div class="mav" style="align-self:flex-start;margin-top:6px;">${botIco}</div>
+    <div style="flex:1;min-width:0;">
+      <div class="bbl" style="padding-bottom:8px;">✅ I have all the details I need! Here's a summary — please confirm:</div>
+      <div class="confirm-card">
+        <div class="cc-body">
+          <div class="cc-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Complaint Summary
+          </div>
+          <div class="cc-desc">
+            <div class="cc-lbl">Issue Description</div>
+            <div class="cc-val" style="font-size:13px;font-weight:500;color:var(--dark);margin-top:4px;">${response.collected.description}</div>
+          </div>
+          <div class="cc-grid">
+            <div class="cc-item"><div class="cc-lbl">Location</div><div class="cc-val">${response.collected.location}</div></div>
+            <div class="cc-item"><div class="cc-lbl">Category</div><div class="cc-val">${response.collected.category}</div></div>
+            <div class="cc-item"><div class="cc-lbl">Priority</div><div class="cc-val ${priClass[response.collected.priority]||''}">${priLabel[response.collected.priority]||response.collected.priority}</div></div>
+            <div class="cc-item"><div class="cc-lbl">SLA Limit</div><div class="cc-val">${response.sla}</div></div>
+            <div class="cc-item"><div class="cc-lbl">Department</div><div class="cc-val">${response.dept}</div></div>
+            <div class="cc-item"><div class="cc-lbl">Contact</div><div class="cc-val">${response.contact}</div></div>
+          </div>
+          <div class="cc-actions">
+            <button class="cc-confirm" id="ccBtn" onclick="submitTicket()">
+              <div class="cc-spin"></div>
+              <span class="cc-lbl2" style="display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Yes, Submit Ticket
+              </span>
+            </button>
+            <button class="cc-edit" onclick="editComplaint()">Edit Details</button>
+          </div>
+        </div>
+      </div>
+      <div class="mt">${nowT()}</div>
+    </div>`;
+  }
+
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
+}
+
+/* ══════════════════════════════════════
+   SEND MESSAGE
+══════════════════════════════════════ */
+async function send(){
+  const inp  = document.getElementById('inp');
+  const txt  = inp.value.trim();
+  if(!txt && mediaFiles.length===0) return;
+
+  if(!inChat){ enterChat(); return; }
+
+  /* show user message */
+  let displayMsg = txt;
+  if(mediaFiles.length) displayMsg += (txt?' ':'') + `📎 ${mediaFiles.length} file(s) attached`;
+  if(txt || mediaFiles.length) addMsg('user', displayMsg || '📎 Media attached');
+
+  inp.value = '';
+  document.getElementById('sndBtn').disabled = true;
+
+  /* show typing */
+  addTyping();
+  await sleep(800 + Math.random()*600);
+  removeTyping();
+
+  /* get agent response */
+  const response = await agentReply(txt || '(media attached)');
+  document.getElementById('sndBtn').disabled = false;
+
+  if(response.type === 'submit'){
+    await submitTicket();
+  } else {
+    addBotMessage(response);
+    document.getElementById('msgs').scrollTop = document.getElementById('msgs').scrollHeight;
+  }
+}
+
+/* quick chip click */
+function chipClick(val){
+  /* map chip display text to actual values */
+  const priMap = {
+    '🔴 Critical — immediate danger':'critical',
+    '🟠 High — affects work now':'high',
+    '🟡 Medium — can wait a bit':'medium',
+    '🟢 Low — minor issue':'low'
+  };
+  const actual = priMap[val] || val;
+  document.getElementById('inp').value = actual;
+  send();
+}
+
+/* ══════════════════════════════════════
+   START CONVERSATION
+══════════════════════════════════════ */
+async function startConversation(){
+  /* reset state */
+  Object.keys(collected).forEach(k=> collected[k] = k==='mediaUrls'?[]:null);
+  conversationHistory = [];
+  awaitingConfirm = false;
+  mediaFiles = [];
+  document.getElementById('msgs').innerHTML = '';
+  document.getElementById('mediaPrev').innerHTML = '';
+  updateProgress();
+
+  await sleep(400);
+  addBotMessage({
+    type:'text',
+    text:`👋 Hi <strong>${username.charAt(0).toUpperCase()+username.slice(1)}</strong>! I'm your AI campus assistant.<br><br>Just tell me what's wrong in plain words — I'll ask a few quick questions to get all the details, then route your complaint to the right team instantly. You can also attach a photo or use voice input.`,
+    chips:[]
+  });
+}
+
+/* ══════════════════════════════════════
+   SUBMIT TICKET
+══════════════════════════════════════ */
+async function submitTicket(){
+  const btn = document.getElementById('ccBtn');
+  if(btn) btn.classList.add('loading');
+
+  addTyping();
+  await sleep(1500);
+  removeTyping();
+
+  /* generate ticket */
+  const tid = 'TKT-' + new Date().getFullYear() + '-' + Math.floor(1000+Math.random()*9000);
+  const cat = collected.category || 'General';
+  const deptInfo = DEPT_MAP[cat] || {dept:'General Maintenance'};
+
+  const ticket = {
+    id: tid,
+    title: collected.description?.slice(0,60) || 'Campus Issue',
+    description: collected.description,
+    location: collected.location || 'Not specified',
+    category: cat,
+    priority: collected.priority || 'medium',
+    department: deptInfo.dept,
+    status: 'Open',
+    createdAt: new Date().toISOString(),
+    username
+  };
+
+  const all = JSON.parse(localStorage.getItem('tickets')||'[]');
+  all.push(ticket);
+  localStorage.setItem('tickets', JSON.stringify(all));
+
+  addMsg('bot', `✅ Routing to <strong>${deptInfo.dept}</strong>… sending WhatsApp alert to ${DEPT_MAP[cat]?.contact || 'maintenance team'}.`);
+  await sleep(700);
+
+  document.getElementById('tidNum').textContent = tid;
+  document.getElementById('sucMod').classList.add('open');
+  spawnConfetti();
+  loadStats();
+
+  /* update progress — all done */
+  ['p1','p2','p3','p4'].forEach(id=> document.getElementById(id).className='prog-item done');
+  document.getElementById('p5').className='prog-item done';
+}
+
+function editComplaint(){
+  awaitingConfirm = false;
+  addBotMessage({type:'text', text:"Sure! What would you like to change? You can tell me the correct location, category, or priority and I'll update it.", chips:[]});
+}
+
+/* ══════════════════════════════════════
+   MEDIA HANDLING
+══════════════════════════════════════ */
+function handleMedia(input){
+  Array.from(input.files).forEach(f=>{
+    if(mediaFiles.length >= 5){ showToast('⚠️ Limit','Max 5 files allowed'); return; }
+    mediaFiles.push(f);
+    const wrap = document.createElement('div'); wrap.className='prev-wrap';
+    const img  = document.createElement('img'); img.className='prev-th';
+    img.src = URL.createObjectURL(f);
+    const rm = document.createElement('button'); rm.className='prev-rm'; rm.textContent='×';
+    rm.onclick = ()=>{ mediaFiles = mediaFiles.filter(x=>x!==f); wrap.remove(); };
+    wrap.appendChild(img); wrap.appendChild(rm);
+    document.getElementById('mediaPrev').appendChild(wrap);
+  });
+  input.value='';
+}
+
+/* ══════════════════════════════════════
+   VOICE INPUT (Web Speech API)
+══════════════════════════════════════ */
+let recognition = null;
+let isListening = false;
+
+function toggleVoice(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    showToast('⚠️ Not supported','Voice input requires Chrome or Edge'); return;
+  }
+  if(isListening){ recognition.stop(); return; }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'en-IN';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+
+  const btn  = document.getElementById('voiceBtn');
+  const txt  = document.getElementById('voiceTxt');
+  const inp  = document.getElementById('inp');
+
+  recognition.onstart = ()=>{
+    isListening = true;
+    btn.style.background = 'rgba(220,38,38,.1)';
+    btn.style.borderColor = '#fca5a5';
+    btn.style.color = '#dc2626';
+    txt.textContent = '● Recording…';
+  };
+  recognition.onresult = e=>{
+    const transcript = Array.from(e.results).map(r=>r[0].transcript).join('');
+    inp.value = transcript;
+  };
+  recognition.onend = ()=>{
+    isListening = false;
+    btn.style.background=''; btn.style.borderColor=''; btn.style.color='';
+    txt.textContent = 'Voice';
+    if(inp.value.trim()) send();
+  };
+  recognition.onerror = e=>{ showToast('⚠️ Voice Error', e.error); };
+  recognition.start();
+}
+
+/* ══════════════════════════════════════
+   CONFETTI + RESET
+══════════════════════════════════════ */
+function spawnConfetti(){
+  const a = document.getElementById('cfWrap');
+  const cols=['#7c3aed','#6366f1','#a78bfa','#22c55e','#f59e0b','#f43f5e'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('div'); p.className='cf';
+    const s=4+Math.random()*9;
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${1+Math.random()*2}s;animation-delay:${Math.random()*.5}s;border-radius:${Math.random()>.4?'50%':'2px'};`;
+    a.appendChild(p);
+  }
+}
+
+function resetChat(){
+  document.getElementById('sucMod').classList.remove('open');
+  document.getElementById('cfWrap').innerHTML='';
+  awaitingConfirm = false;
+  startConversation();
+}
+
+function backToIntro(){
+  const intro=document.getElementById('introScreen'),chat=document.getElementById('chatScreen');
+  chat.classList.remove('visible');
+  setTimeout(()=>{
+    chat.style.display='none'; intro.style.display='flex';
+    intro.classList.remove('exit');
+    intro.style.opacity='0'; intro.style.transform='translateY(14px)';
+    requestAnimationFrame(()=>{
+      intro.style.transition='opacity .45s,transform .45s';
+      intro.style.opacity='1'; intro.style.transform='none';
+    });
+  },350);
+  inChat=false;
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+let toastTmr;
+function showToast(title,body){
+  clearTimeout(toastTmr);
+  document.getElementById('ttT').textContent=title;
+  document.getElementById('ttB').textContent=body;
+  const el=document.getElementById('toast'); el.classList.add('show');
+  toastTmr=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+/* ══════════════════════════════════════
+   BACKEND INTEGRATION NOTE
+   When FastAPI /chat endpoint is ready,
+   replace agentReply() with this:
+
+   async function agentReply(msg){
+     const res = await fetch('http://localhost:8000/chat', {
+       method:'POST',
+       headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+       body: JSON.stringify({
+         session_id: SESSION_ID,
+         message: msg,
+         history: conversationHistory,
+         collected: collected
+       })
+     });
+     return await res.json();
+   }
+══════════════════════════════════════ */
+</script>
+</body>
+</html>

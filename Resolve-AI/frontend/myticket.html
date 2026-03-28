@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResolveAI — My Tickets</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--p:#7c3aed;--i:#6366f1;--pl:#a78bfa;--pp:#ede9fe;--dark:#1e1b4b;--gray:#6b7280;--border:#e5e7eb;}
+html,body{font-family:'Inter',sans-serif;min-height:100vh;background:linear-gradient(135deg,#f0f0ff 0%,#e8e4ff 35%,#f5f0ff 65%,#eaf0ff 100%);overflow-x:hidden;}
+body{display:flex;}
+.mesh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.mb{position:absolute;border-radius:50%;filter:blur(80px);}
+.mb1{width:500px;height:500px;background:rgba(124,58,237,.07);top:-150px;left:-100px;animation:drift 12s ease-in-out infinite;}
+.mb2{width:400px;height:400px;background:rgba(99,102,241,.06);bottom:-100px;right:-100px;animation:drift 10s 2s ease-in-out infinite;}
+@keyframes drift{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
+.sidebar{width:240px;min-height:100vh;background:rgba(255,255,255,.75);backdrop-filter:blur(20px);border-right:1px solid rgba(124,58,237,.1);padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;z-index:10;flex-shrink:0;}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;padding:0 8px;}
+.sb-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--p),var(--i));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(124,58,237,.3);}
+.sb-name{font-size:18px;font-weight:800;color:var(--dark);letter-spacing:-.5px;}
+.sb-name span{color:var(--p);}
+.sb-user{background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.12);border-radius:14px;padding:12px;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.sb-av{width:36px;height:36px;background:linear-gradient(135deg,var(--p),var(--i));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-nm{font-size:13px;font-weight:600;color:var(--dark);}
+.sb-rl{font-size:11px;color:var(--gray);}
+.nav-sec{font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:6px;}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;color:var(--gray);font-size:13px;font-weight:500;margin-bottom:2px;transition:all .2s;text-decoration:none;}
+.nav-link:hover{background:rgba(124,58,237,.06);color:var(--p);}
+.nav-link.active{background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(99,102,241,.06));color:var(--p);font-weight:600;}
+.nav-link svg{width:16px;height:16px;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:var(--p);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.sb-bot{margin-top:auto;padding-top:16px;border-top:1px solid rgba(124,58,237,.1);}
+.logout{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;color:#9ca3af;font-size:13px;font-weight:500;border:none;background:none;width:100%;font-family:'Inter',sans-serif;transition:all .2s;}
+.logout:hover{color:var(--p);background:rgba(124,58,237,.06);}
+.main{flex:1;display:flex;flex-direction:column;position:relative;z-index:1;}
+.topbar{background:rgba(255,255,255,.8);backdrop-filter:blur(16px);border-bottom:1px solid rgba(124,58,237,.08);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:9;}
+.tb-title{font-size:17px;font-weight:700;color:var(--dark);}
+.tb-sub{font-size:12px;color:var(--gray);margin-top:1px;}
+.btn-new{padding:10px 20px;background:linear-gradient(135deg,var(--p),var(--i));color:#fff;border:none;border-radius:11px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(124,58,237,.3);transition:.2s;}
+.btn-new:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.4);}
+.content{padding:24px 28px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.sc{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border:1px solid rgba(124,58,237,.1);border-radius:18px;padding:18px 20px;box-shadow:0 4px 16px rgba(124,58,237,.06);position:relative;overflow:hidden;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:18px 18px 0 0;}
+.sc.purple::before{background:var(--p);}.sc.amber::before{background:#f59e0b;}.sc.green::before{background:#22c55e;}.sc.indigo::before{background:#4f46e5;}
+.sc-lbl{font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.sc-val{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:2px;}
+.sc.purple .sc-val{color:var(--p);}.sc.amber .sc-val{color:#f59e0b;}.sc.green .sc-val{color:#22c55e;}.sc.indigo .sc-val{color:#4f46e5;}
+.sc-sub{font-size:11px;color:#9ca3af;}
+.tbl-card{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border:1px solid rgba(124,58,237,.1);border-radius:20px;box-shadow:0 4px 20px rgba(124,58,237,.07);overflow:hidden;}
+.tbl-hdr{padding:16px 20px;border-bottom:1px solid rgba(124,58,237,.08);font-size:14px;font-weight:700;color:var(--dark);}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.4px;padding:11px 16px;text-align:left;border-bottom:1px solid rgba(124,58,237,.08);background:rgba(124,58,237,.02);}
+td{padding:13px 16px;font-size:13px;color:var(--dark);border-bottom:1px solid rgba(124,58,237,.05);vertical-align:middle;}
+tr:hover td{background:rgba(124,58,237,.03);}
+tr:last-child td{border-bottom:none;}
+.badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.b-open{background:#fff7ed;color:#c2410c;}.b-prog{background:#ede9fe;color:#7c3aed;}.b-done{background:#f0fdf4;color:#15803d;}.b-closed{background:#f8f9fa;color:#64748b;}.b-critical{background:#fef2f2;color:#dc2626;font-weight:700;}.b-high{background:#fff7ed;color:#c2410c;}.b-medium{background:#ede9fe;color:#7c3aed;}.b-low{background:#f8f9fa;color:#64748b;}.b-net{background:#eff6ff;color:#1d4ed8;}.b-elec{background:#fff7ed;color:#c2410c;}.b-civil{background:#f0fdf4;color:#15803d;}.b-av{background:#faf5ff;color:#7e22ce;}
+.btn-verify{padding:6px 12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.btn-verify:hover{transform:translateY(-1px);}
+.btn-reopen{padding:6px 12px;background:#fff;border:1.5px solid #ef4444;color:#ef4444;border-radius:8px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.btn-reopen:hover{background:#fef2f2;}
+.btn-view{padding:6px 12px;background:#fff;border:1.5px solid rgba(124,58,237,.2);color:var(--p);border-radius:8px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;}
+.btn-view:hover{background:rgba(124,58,237,.06);}
+.modal{display:none;position:fixed;inset:0;background:rgba(30,27,75,.4);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;}
+.modal.open{display:flex;}
+.modal-box{background:#fff;border-radius:22px;padding:32px;width:420px;box-shadow:0 24px 72px rgba(124,58,237,.2);text-align:center;}
+.modal-box h3{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:5px;}
+.modal-sub{font-size:13px;color:#9ca3af;margin-bottom:20px;}
+.stars{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.star{font-size:0;width:36px;height:36px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;}
+.star svg{width:32px;height:32px;transition:.2s;}
+.star.on svg{fill:#f59e0b;stroke:#f59e0b;}
+.star:hover svg{transform:scale(1.2);}
+.fg{margin-bottom:14px;text-align:left;}
+.fg label{display:block;font-size:12px;font-weight:600;color:#374151;margin-bottom:6px;}
+.fg textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);background:#fafafa;outline:none;resize:none;transition:.2s;}
+.fg textarea:focus{border-color:var(--p);background:#fff;box-shadow:0 0 0 4px rgba(124,58,237,.08);}
+.modal-actions{display:flex;gap:10px;}
+.btn-sec{flex:1;padding:12px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--dark);cursor:pointer;transition:.2s;}
+.btn-sec:hover{border-color:var(--p);color:var(--p);}
+.btn-pri{flex:2;padding:12px;background:linear-gradient(135deg,var(--p),var(--i));border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:.2s;box-shadow:0 4px 14px rgba(124,58,237,.3);}
+.btn-pri:hover{transform:translateY(-1px);}
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,var(--p),var(--i));color:#fff;border-radius:14px;padding:14px 18px;box-shadow:0 8px 32px rgba(124,58,237,.3);z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-t{font-weight:700;font-size:13px;margin-bottom:2px;}
+.toast-b{font-size:12px;color:rgba(255,255,255,.8);}
+@media(max-width:900px){.stats-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.sidebar{display:none;}.content{padding:16px;}}
+</style>
+</head>
+<body>
+<div class="mesh"><div class="mb mb1"></div><div class="mb mb2"></div></div>
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="sb-name">Resolve<span>AI</span></div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-av" id="sav">S</div>
+    <div><div class="sb-nm" id="snm">Student</div><div class="sb-rl" id="srl">KPR College</div></div>
+  </div>
+  <div class="nav-sec">Menu</div>
+  <a class="nav-link" href="complaint.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Report Issue</a>
+  <a class="nav-link active" href="my-tickets.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>My Tickets<span class="nav-badge">2</span></a>
+  <div class="sb-bot"><button class="logout" onclick="localStorage.clear();location.href='login.html'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button></div>
+</nav>
+<div class="main">
+  <div class="topbar">
+    <div><div class="tb-title">My Tickets</div><div class="tb-sub">Track and manage your submitted complaints</div></div>
+    <a href="complaint.html" class="btn-new"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Complaint</a>
+  </div>
+  <div class="content">
+    <div class="stats-row">
+      <div class="sc purple"><div class="sc-lbl">Total</div><div class="sc-val">7</div><div class="sc-sub">All time</div></div>
+      <div class="sc amber"><div class="sc-lbl">Open</div><div class="sc-val">2</div><div class="sc-sub">Awaiting resolution</div></div>
+      <div class="sc green"><div class="sc-lbl">Resolved</div><div class="sc-val">5</div><div class="sc-sub">Completed</div></div>
+      <div class="sc indigo"><div class="sc-lbl">Avg Fix Time</div><div class="sc-val">4.2h</div><div class="sc-sub">Within SLA</div></div>
+    </div>
+    <div class="tbl-card">
+      <div class="tbl-hdr">All Tickets</div>
+      <table>
+        <thead><tr><th>Ticket ID</th><th>Issue</th><th>Category</th><th>Priority</th><th>Status</th><th>SLA</th><th>Raised</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;color:var(--p);">TKT-024</td><td style="font-weight:500;">Projector not working — CS Lab 3</td><td><span class="badge b-av">Audio-Visual</span></td><td><span class="badge b-high">High</span></td><td><span class="badge b-prog">In Progress</span></td><td style="color:#f59e0b;font-weight:600;">3h left</td><td>2h ago</td><td><button class="btn-view">Track</button></td></tr>
+          <tr><td style="font-weight:700;color:var(--p);">TKT-023</td><td style="font-weight:500;">WiFi down — Seminar Hall B</td><td><span class="badge b-net">Network</span></td><td><span class="badge b-critical">Critical</span></td><td><span class="badge b-open">Open</span></td><td style="color:#ef4444;font-weight:700;">45m left</td><td>30m ago</td><td><button class="btn-view">Track</button></td></tr>
+          <tr><td style="font-weight:700;color:var(--dark);">TKT-019</td><td style="font-weight:500;">AC not cooling — Room 204</td><td><span class="badge b-elec">Electrical</span></td><td><span class="badge b-medium">Medium</span></td><td><span class="badge b-done">Resolved</span></td><td style="color:#22c55e;font-weight:600;">On time</td><td>1d ago</td><td><button class="btn-verify" onclick="openFb('TKT-019')">Verify & Rate</button></td></tr>
+          <tr><td style="font-weight:700;color:var(--dark);">TKT-015</td><td style="font-weight:500;">Broken chair — Lab 1</td><td><span class="badge b-civil">Civil</span></td><td><span class="badge b-low">Low</span></td><td><span class="badge b-closed">Closed</span></td><td style="color:#22c55e;font-weight:600;">On time</td><td>3d ago</td><td><button class="btn-reopen" onclick="showToast('Reopened','TKT-015 has been reopened')">Reopen</button></td></tr>
+          <tr><td style="font-weight:700;color:var(--dark);">TKT-011</td><td style="font-weight:500;">Light flickering — Corridor B2</td><td><span class="badge b-elec">Electrical</span></td><td><span class="badge b-high">High</span></td><td><span class="badge b-closed">Closed</span></td><td style="color:#22c55e;font-weight:600;">On time</td><td>5d ago</td><td><button class="btn-view">View</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal" id="fbModal">
+  <div class="modal-box">
+    <h3>Rate the Resolution</h3>
+    <div class="modal-sub" id="fbTid">TKT-019 — How satisfied are you?</div>
+    <div class="stars" id="stars">
+      <div class="star" onclick="rate(1)"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rate(2)"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rate(3)"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rate(4)"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rate(5)"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+    </div>
+    <div class="fg"><label>Comment (optional)</label><textarea rows="3" placeholder="Tell us about the resolution experience..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-sec" onclick="document.getElementById('fbModal').classList.remove('open')">Cancel</button>
+      <button class="btn-pri" onclick="submitFb()">Verify & Close Ticket</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"><div class="toast-t" id="tt"></div><div class="toast-b" id="tb"></div></div>
+<script>
+const u=localStorage.getItem('username')||'Student',r=localStorage.getItem('role')||'student';
+document.getElementById('snm').textContent=u.charAt(0).toUpperCase()+u.slice(1);
+document.getElementById('sav').textContent=u.charAt(0).toUpperCase();
+document.getElementById('srl').textContent=r.charAt(0).toUpperCase()+r.slice(1);
+let sel=0;
+function openFb(id){sel=0;document.querySelectorAll('.star').forEach(s=>s.classList.remove('on'));document.getElementById('fbTid').textContent=`${id} — How satisfied are you?`;document.getElementById('fbModal').classList.add('open');}
+function rate(n){sel=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n));}
+function submitFb(){document.getElementById('fbModal').classList.remove('open');showToast('Ticket Closed!',`Rated ${sel} star${sel!==1?'s':''}. Thank you!`);}
+let tmt;
+function showToast(t,b){clearTimeout(tmt);document.getElementById('tt').textContent=t;document.getElementById('tb').textContent=b;const el=document.getElementById('toast');el.classList.add('show');tmt=setTimeout(()=>el.classList.remove('show'),3500);}
+</script>
+</body>
+</html>
